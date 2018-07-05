@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetFiddle.NetApp1.0", "src\Syncfusion_16.1.0.37\Syncfusion_16.1.0.37.csproj", "{6F214BB1-2E5E-44BF-9207-5AD6F7FB3A2A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotnetFiddle.NetApp1.1", "src\Syncfusion_16.2.0.41\Syncfusion_16.2.0.41.csproj", "{F1914457-5258-47E6-B45C-7C262348A75A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F214BB1-2E5E-44BF-9207-5AD6F7FB3A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F214BB1-2E5E-44BF-9207-5AD6F7FB3A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F214BB1-2E5E-44BF-9207-5AD6F7FB3A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F214BB1-2E5E-44BF-9207-5AD6F7FB3A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1914457-5258-47E6-B45C-7C262348A75A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1914457-5258-47E6-B45C-7C262348A75A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1914457-5258-47E6-B45C-7C262348A75A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1914457-5258-47E6-B45C-7C262348A75A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
