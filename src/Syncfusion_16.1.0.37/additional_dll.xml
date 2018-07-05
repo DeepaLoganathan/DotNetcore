@@ -1,0 +1,6 @@
+﻿<Group name="DLL">
+  <Version value="16.2.0.41"></Version>
+  <ComponentDlls>
+    <DLL name="Syncfusion.EJ.Export"></DLL>
+  </ComponentDlls>
+</Group>

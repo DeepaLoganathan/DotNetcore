@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "DatePicker";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id = "ControlRegion">
+    <h2>Picker controls</h2>
+    
+    <ej-date-picker id="DatePick" value="DateTime.Today"
+                    show-other-months="true"
+                    date-format="MM/dd/yyyy"></ej-date-picker>
+    <ej-time-picker id="Timepick" value="DateTime.Today"
+                    show-other-months="true"
+                    date-format="MM/dd/yyyy"></ej-time-picker>
+    <ej-date-time-picker  id="DateTimePick" value="DateTime.Today"
+                    show-other-months="true"
+                    date-format="MM/dd/yyyy"></ej-date-time-picker>
+    <ej-date-range-picker id="DateTimeRangePick" value="DateTime.Today"
+                         show-other-months="true"
+                         date-format="MM/dd/yyyy"></ej-date-range-picker>
+</div>
+
