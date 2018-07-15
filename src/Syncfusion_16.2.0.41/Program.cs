@@ -65,11 +65,15 @@ namespace DotnetFiddle
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+				.UseUrls("http://*:5001")
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                  .CaptureStartupErrors(true)
                 .Build();
-
+            if (args.Length == 4)
+                Console.Write("Generated url: localhost:5001/{0}/{1}\n", args[1], args[2]);
+            else if (args.Length == 5)
+                Console.Write("Generated url: localhost:5001/{0}/{1}/{2}/{3}\n", args[0], args[1], args[2], args[3]);
 
             host.Run();
         }

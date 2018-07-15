@@ -20,6 +20,7 @@ namespace DotnetFiddle
     public class Program
     {
         private static string version;
+
         // To get current .NET core version on which the application runs
         private static string GetNetCoreVersion()
         {
@@ -30,10 +31,10 @@ namespace DotnetFiddle
                 return assemblyPath[netCoreAppIndex + 1];
             return null;
         }
+
         public static void Main(string[] args)
         {
             // Read XML file to get dlls to be added 
-
             XmlReader xmlReader = XmlReader.Create("additional_dll.xml");
             while (xmlReader.Read())
             {
@@ -57,15 +58,22 @@ namespace DotnetFiddle
                 }
             }
 
+
+
             // configure host environment
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+				.UseUrls("http://*:5000")
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
-    //.UseUrls("http://localhost:5100", "http://localhost:5101", "http://*:5102")
                 .Build();
+
+            if (args.Length == 4)
+                Console.Write("Generated url: localhost:5000/{0}/{1}\n", args[1], args[2]);
+            else if (args.Length == 5)
+                Console.Write("Generated url: localhost:5000/{0}/{1}/{2}/{3}\n", args[0], args[1], args[2], args[3]);
 
             host.Run();
         }
