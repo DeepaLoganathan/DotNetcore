@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "DatePicker";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ControlRegion">
+    <h2>Picker controls</h2>
+    <form asp-controller="DatePicker" asp-action="FormSubmit" method="post">
+
+        <ej-date-picker id="DatePick" name="Date" show-other-months="true" date-format="MM/dd/yyyy"></ej-date-picker>
+        <ej-time-picker id="Timepick" name="Time" show-other-months="true" date-format="MM/dd/yyyy"></ej-time-picker>
+        <ej-date-time-picker id="DateTime" name="datetime" show-other-months="true" date-format="MM/dd/yyyy"></ej-date-time-picker>
+        <ej-button id="button11" text="Login" size="@ButtonSize.Normal" show-rounded-corner="true"  />
+    </form>
+
+</div>
+

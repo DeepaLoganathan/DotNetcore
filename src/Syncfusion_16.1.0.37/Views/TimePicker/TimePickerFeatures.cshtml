@@ -1,0 +1,13 @@
+﻿@model DotnetFiddle.Models.DPModel
+@{
+    ViewBag.Title = "DatePicker";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="ControlRegion">
+    <h2>TimePicker controls</h2>
+        <ej-time-picker id="Timepick" name="Time" show-other-months="true" date-format="MM/dd/yyyy" ej-for="@Model.Time" ></ej-time-picker>
+        <ej-button id="button11" text="Login" size="@ButtonSize.Normal" show-rounded-corner="true"  />
+
+</div>
+
