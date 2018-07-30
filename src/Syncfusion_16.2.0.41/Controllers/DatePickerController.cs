@@ -9,7 +9,7 @@ namespace DotnetFiddle.Controllers
     {
         //
         // GET: /Default/
-        public IActionResult defaultfunc()
+        public IActionResult DatePickerFeatures()
         {
             return View("DatePickerFeatures");
         }
