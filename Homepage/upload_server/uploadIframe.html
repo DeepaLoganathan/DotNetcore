@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link href="http://cdn.syncfusion.com/16.2.0.41/js/web/flat-azure/ej.web.all.min.css" rel="stylesheet" />
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+
+    <script src="http://cdn.syncfusion.com/js/assets/external/jquery-1.10.2.min.js"></script>
+    <script src="http://cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
+    <script src="http://cdn.syncfusion.com/16.2.0.41/js/web/ej.web.all.js"></script>
+    <script>if (window.module) module = window.module;</script>
+</head>
+<body>
+    <form id="form1" action="saveFiles.ashx" method="post" style="overflow:hidden">
+        <!---Form is created with post method and action is mapped to ashx handler. Uploading files will be done only on clicking submit button after selecting the files.!--->
+
+        <div class="posupload">Select a files to upload</div>
+        <div id="UploadDefault"></div>
+        <input type="submit" id="post" value="Submit" />
+     
+    </form>
+    <script type="text/javascript">
+        $(function () {
+            // declaration
+            $("#UploadDefault").ejUploadbox({
+                asyncUpload: false,
+                showFileDetails: false
+            });
+            $("#post").ejButton({
+                size: "normal",
+                showRoundedCorner: true,
+                type: "submit"              
+            });         
+            $("#successmsg").appendTo("#form1");
+        });
+    </script>
+    <style class="cssStyles">
+        .posupload {
+            text-align: center;
+            padding: 10px;
+        }
+
+        #UploadDefault, #post {
+            margin: 18px auto;
+            display: block;
+        }
+
+        #successmsg {
+            display: block;
+            text-align: center;
+        }
+    </style>
+</body>
+</html>

@@ -1,4 +1,4 @@
-@echo off
+	@echo off
 
 
 REM Check for available Sync and .net versions controller and view page
@@ -33,10 +33,10 @@ set "port=5000"
 ) else (
 set "port=5001"
 ) 
-
+dotnet restore
 for /F "tokens=5 delims= " %%P in ('netstat -a -n -o ^| findstr :!port!.*LISTENING') do TaskKill.exe /PID %%P /f
 
-dotnet watch run --framework netcoreapp%net_ver% [ %controller% %view% %options% ]
+dotnet watch run --framework %net_ver%
 
 )
 pause

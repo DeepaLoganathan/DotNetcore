@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Syncfusion-Inc .NET core samples</title>
+    <link href="http://cdn.syncfusion.com/16.2.0.41/js/web/material/ej.web.all.min.css" rel="stylesheet" />
+    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+
+    <script src="http://cdn.syncfusion.com/js/assets/external/jquery-1.10.2.min.js"></script>
+    <script src="http://cdn.syncfusion.com/js/assets/external/jsrender.min.js"></script>
+    <script src="http://cdn.syncfusion.com/16.2.0.41/js/web/ej.web.all.js"></script>
+    <script>if (window.module) module = window.module;</script>
+    <style>
+.heading{
+    
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #3F51B5;
+    text-align: center;
+}
+#upload_section h4.heading{
+    margin:0px;
+}
+       div.heading{
+    padding: 20px;
+    font-size: 20px;
+    background-color: #3F51B5;
+    margin-left: 23px;
+    margin-right: 23px;
+    margin-top: 23px;
+    color: white;
+       }
+       input.e-input, .e-textbox{
+           padding: 10px;
+       }
+       .e-uploadbox.e-widget .e-inputbtn{
+        font-size: 14px;
+        text-transform: uppercase;
+    font-family: 'Roboto',Segoe UI,Helvetica Neue,Ubuntu,Arial;
+       }
+        h4{
+    margin: 0;
+    padding: 30px;
+        }
+        body{
+            margin: 0px;
+            background-color: #eee;
+        }
+        .sync_drop,.sync_text{
+            width: 400px;
+        }
+        section#main{
+            width: 100%;
+           
+        }
+        section.sub_heading{
+    margin-left: 23px;
+    margin-top: 17px;
+    width: 47%;
+    float: left;
+    border: 1px solid #eddddd;
+    background-color: #ede9e9;
+        }
+        form#user_input > .sync_btn{
+            margin-left: 40%;
+    margin-bottom: 26px;
+        }
+        form#user_input > *{
+    margin-left: 17%;
+    margin-top: 12px;
+}
+#upload_section > *{
+margin-left: 25%;
+margin-top: 12px;
+
+}
+
+#upload_section{
+    padding-bottom: 192px;
+}
+    </style>
+</head>
+<body>
+    <div class="heading">.NET core - Sample sharing</div>
+    <section id="main"> 
+        <section class="sub_heading">
+
+    <h4  class="heading">Choose versions and sample to run</h4>
+    <form id="user_input" action="http://localhost:8080/submit_form" method="GET">
+        <input id="netcore_ver" type="text" class="sync_drop" name="netcore_ver" /><br>
+        <input id="sync_ver" type="text" class="sync_drop" name="sync_ver" /><br>
+        <input id="controller" required type="text" name="controller" class="sync_text e-textbox" autocomplete="off" placeholder="Enter controller name" /></br></br>
+        <input id="view" required type="text"  name="view" class="sync_text e-textbox" autocomplete="off" placeholder="Enter view name" /><br></br>
+        <input id="form_submit" class="sync_btn" type="submit" /><br>
+    </form>
+</section>
+<section id="upload_section" class="sub_heading">
+
+<h4  class="heading">Upload files</h4>
+        <div id="controller_file" name="controller_file" class="sync_upload"></div><br>
+        <div id="view_file" name="view_file" class="sync_upload"></div><br>
+
+    </section></section>
+
+    <script>
+
+        $(function () {
+            submit_val = function () {
+                $.ajax({
+                    type: "POST",
+                    data: { version: "16.1.0.37" },
+                    url: "/upload_server/saveFiles_controller.ashx",
+                    success: function (data) {
+                        debugger
+                    }
+                })
+            }
+            $("#netcore_ver").ejDropDownList({
+                width: "400px",
+                value: "netcoreapp1.0",
+                dataSource: [{ text: "1.0", value: "netcoreapp1.0" },
+                { text: "2.0", value: "netcoreapp2.0" }]
+            });
+            $("#sync_ver").ejDropDownList({
+                width: "400px",
+                value: "16.1.0.37",
+                dataSource: [{ text: "16.1.0.37", value: "16.1.0.37" },
+                { text: "16.2.0.41", value: "16.2.0.41" }]
+            });
+
+            $("#controller_file").ejUploadbox({
+                width: "inherit",
+                saveUrl: "/upload_server/saveFiles_controller.ashx",
+                extensionsAllow: ".cs, .cshtml",
+                begin:(args)=> {
+                    args.data = { sync_ver: $("#sync_ver").val()}
+                },
+                buttonText: {browse: "Browse Controller"}
+            });
+
+
+            $("#view_file").ejUploadbox({
+                width: "inherit",
+                saveUrl: "/upload_server/saveFiles_view.ashx",
+                extensionsAllow: ".cs, .cshtml",
+                begin: (args)=> {
+                    args.data = { sync_ver: $("#sync_ver").val()}
+                },
+                buttonText: {browse: "Browse View page"}
+            });
+
+            $(".sync_btn").ejButton({
+                click: "submit_form"
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+
+
+
