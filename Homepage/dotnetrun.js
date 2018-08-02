@@ -1,4 +1,4 @@
-console.log("Hello world!");
+// Use Express JS to handle form on server
 
 var express = require('express');
 var bodyParser = require('body-parser');
