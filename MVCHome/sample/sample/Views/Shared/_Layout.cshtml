@@ -1,0 +1,24 @@
+﻿@using Syncfusion.EJ2
+<!DOCThtml>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/material.css" rel="stylesheet" />
+    <!-- Syncfusion Essential JS 2 Scripts -->
+    <script src="~/Scripts/ej2.min.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="heading">.NET core - Sample sharing</div>
+   
+        @RenderBody()
+        <hr />
+      
+    @Html.EJS().ScriptManager()
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

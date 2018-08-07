@@ -1,0 +1,167 @@
+﻿@using sample.Model
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<section id="main">
+    <section class="sub_heading">
+        <div id="user_input">
+            <h4 class="heading">Choose versions and sample to run</h4>
+            @using (Ajax.BeginForm("Index", "Default", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "Target" }))
+            {
+                @Html.EJS().DropDownList("net_ver").Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel>)@ViewBag.data).Width("400px").Render()
+                @Html.EJS().DropDownList("sync_ver").Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel_Sync>)@ViewBag.sync_ver).Width("400px").Render()
+                <div class="e-float-input sync_text">
+                    <input id="controller" name="controller" required="" type="text" autocomplete="off" />
+                    <span class="e-float-line"></span>
+                    <label class="e-float-text">Controller</label>
+                </div>
+                <div class="e-float-input sync_text">
+                    <input id="view" name="view" required="" type="text" autocomplete="off">
+                    <span class="e-float-line"></span>
+                    <label class="e-float-text">View</label>
+                </div>
+                @*<input type="submit" />*@
+                @Html.EJS().Button("submit").Content("Submit").Render()
+            }
+        </div>
+    </section>
+    <section class="sub_heading" id="upload_section">
+        <h4 class="heading">Upload files</h4>
+        @Html.EJS().Uploader("controller_file").AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload").Render()
+        <div class="e-float-input sync_text">
+            <input id="view" name="view" required="" type="text" autocomplete="off">
+            <span class="e-float-line"></span>
+            <label class="e-float-text">View</label>
+        </div>
+        @Html.EJS().Uploader("view_file").AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload").Render()
+    </section>
+    <div id="Target"></div>
+</section>
+
+<script>
+    $(function () {
+        $("#submit").attr("type", "submit");
+        $("#submit").addClass("sync_btn");
+    })
+    //$("#submit").click(function (e) {
+    //    e.preventDefault();
+    //    debugger
+
+    //    var data = {
+    //        net_ver: $("#net_ver").val(), sync_ver: $("#sync_ver").val(), controller: $("#controller").val(), view: $("#view").val()
+    //    }
+    //    $.ajax({
+    //        type: "post", 
+    //        url: "Index",
+    //        data: data,
+    //        success: function (response) {
+    //            debugger
+    //            $("#url").html(response);
+    //        },
+    //        error: function (response) {
+    //            $("#url").html(response);
+    //        }
+    //    })
+    //})
+    //updateUrl = function (data) {
+    //    debugger
+    //    alert("success");
+    //}
+
+    beforeUpload = function (args) {
+        args.data = { sync_ver: $("#sync_ver").val(), folder: $("#controller_name").val() }
+    }
+</script>
+
+
+
+
+<style>
+    .heading {
+        font-family: sans-serif;
+        font-weight: bold;
+        color: #3F51B5;
+        text-align: center;
+    }
+
+    #upload_section h4.heading {
+        margin: 0px;
+    }
+
+    div.heading {
+        padding: 23px;
+        font-size: 20px;
+        background-color: #3F51B5;
+        margin-left: 37px;
+        margin-right: 37px;
+        margin-top: 30px;
+        color: white;
+    }
+
+    input.e-input, .e-textbox {
+        padding: 10px;
+    }
+
+    .e-uploadbox.e-widget .e-inputbtn {
+        font-size: 14px;
+        text-transform: uppercase;
+        font-family: 'Roboto',Segoe UI,Helvetica Neue,Ubuntu,Arial;
+    }
+
+    h4 {
+        margin: 0;
+        padding-top: 30px;
+    }
+
+    body {
+        margin: 0px;
+        background-color: #eee;
+    }
+
+    #user_input .sync_text {
+        width: 400px;
+    }
+
+    #upload_section .sync_text {
+        width: inherit;
+    }
+
+    section#main {
+        width: 100%;
+    }
+
+    section.sub_heading {
+        margin: 37px;
+        width: 45%;
+        float: left;
+        border: 1px solid #eddddd;
+        background-color: #ede9e9;
+    }
+
+    #user_input form > .sync_btn {
+        margin-left: 40%;
+        margin-bottom: 26px;
+    }
+
+    #user_input form > * {
+        margin-left: 13%;
+        margin-top: 20px;
+    }
+
+    #upload_section > * {
+        margin-left: 14%;
+        margin-top: 21px;
+        width: 400px;
+    }
+
+    #upload_section {
+        padding-bottom: 88px;
+        margin-left: 0;
+    }
+
+    #output {
+        padding: 10px;
+        width: inherit;
+        margin: 23px;
+    }
+</style>
