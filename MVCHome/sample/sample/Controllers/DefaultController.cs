@@ -113,15 +113,20 @@ namespace sample.Controllers
                     };
 
                     //p.WaitForExit();
-                    Thread.Sleep(10000);
+                    Thread.Sleep(15000);
 
                     consoleoutput = output;
-                    int lIntindex = consoleoutput.IndexOf("http");
+                    var index = consoleoutput.IndexOf("http");
+                    if (index > -1)
+                    {
+                        int lIntindex = consoleoutput.IndexOf("http");
                     int lIntLength = consoleoutput.IndexOf("Application") - lIntindex;
                     string url = consoleoutput.Substring(lIntindex, lIntLength);
                     generatedUrl = url + "/" + mbProjectConfig.controller + "/" + mbProjectConfig.view; ;
-
                 }
+                else
+                    generatedUrl = "Retry after sometime";
+            }
             }
             return Content(generatedUrl);
 
