@@ -5,18 +5,18 @@
 <section id="main">
     <section class="sub_heading">
         <div id="user_input">
-            <h4 class="heading">Choose versions and sample to run</h4>
-            @using (Ajax.BeginForm("Index", "Default", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "Target" }))
+            <h4 class="heading">Configuration and Samples to run</h4>
+            @using (Ajax.BeginForm("Index", "Default", new AjaxOptions { HttpMethod = "Post", UpdateTargetId = "Target" , OnSuccess="displayTarget"}))
             {
-                @Html.EJS().DropDownList("net_ver").Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel>)@ViewBag.data).Width("400px").Render()
-                @Html.EJS().DropDownList("sync_ver").Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel_Sync>)@ViewBag.sync_ver).Width("400px").Render()
+                @Html.EJS().DropDownList("net_ver").Index(0).Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel>)@ViewBag.data).Width("400px").Render()
+                @Html.EJS().DropDownList("sync_ver").Index(0).Fields(e => e.Text("Text").Value("Value")).DataSource((List<DropdownModel_Sync>)@ViewBag.sync_ver).Width("400px").Render()
                 <div class="e-float-input sync_text">
-                    <input id="controller" name="controller" required="" type="text" autocomplete="off" />
+                    <input id="controller" name="controller" required type="text" autocomplete="off" />
                     <span class="e-float-line"></span>
                     <label class="e-float-text">Controller</label>
                 </div>
                 <div class="e-float-input sync_text">
-                    <input id="view" name="view" required="" type="text" autocomplete="off">
+                    <input id="view" name="view" required type="text" autocomplete="off">
                     <span class="e-float-line"></span>
                     <label class="e-float-text">View</label>
                 </div>
@@ -27,15 +27,15 @@
     </section>
     <section class="sub_heading" id="upload_section">
         <h4 class="heading">Upload files</h4>
-        @Html.EJS().Uploader("controller_file").AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload").Render()
+        @Html.EJS().Uploader("controller_file").AutoUpload(false).AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload").Render()
         <div class="e-float-input sync_text">
-            <input id="view" name="view" required="" type="text" autocomplete="off">
+            <input id="view_file_mapping" name="view" required="" type="text" autocomplete="off">
             <span class="e-float-line"></span>
-            <label class="e-float-text">View</label>
+            <label class="e-float-text">Controller</label>
         </div>
-        @Html.EJS().Uploader("view_file").AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload").Render()
+        @Html.EJS().Uploader("view_file").AutoUpload(false).AsyncSettings(new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("/Default/Save") }).Uploading("beforeUpload_view").Render()
     </section>
-    <div id="Target"></div>
+    <section id="Target" class="sub_heading" style="display: none"></section>
 </section>
 
 <script>
@@ -43,6 +43,9 @@
         $("#submit").attr("type", "submit");
         $("#submit").addClass("sync_btn");
     })
+    displayTarget = function () {
+        $("#Target").show();
+        }
     //$("#submit").click(function (e) {
     //    e.preventDefault();
     //    debugger
@@ -69,7 +72,11 @@
     //}
 
     beforeUpload = function (args) {
-        args.data = { sync_ver: $("#sync_ver").val(), folder: $("#controller_name").val() }
+        args.customFormData = [{ 'sync_ver': $("#sync_ver").val()  }];
+    }
+
+    beforeUpload_view = function (args) {
+        args.customFormData = [{ 'sync_ver': $("#sync_ver").val() }, { 'controller': $("#view_file_mapping").val() }];
     }
 </script>
 
@@ -77,6 +84,10 @@
 
 
 <style>
+
+    #upload_section .e-upload.e-control {
+        height: fit-content;
+    }
     .heading {
         font-family: sans-serif;
         font-weight: bold;
@@ -163,5 +174,12 @@
         padding: 10px;
         width: inherit;
         margin: 23px;
+    }
+
+    #Target{
+        width: 93%;
+        padding: 0;
+        margin: 0 37px 37px 37px;
+        padding: 10px;
     }
 </style>
