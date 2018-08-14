@@ -9,6 +9,7 @@ using System.Threading;
 using System.Management;
 using System.Text;
 using System.Runtime.Serialization.Json;
+using System.Net.Mail;
 
 namespace sample.Controllers
 {
@@ -20,8 +21,8 @@ namespace sample.Controllers
     public class DefaultController : Controller
     {
         private string generatedUrl;
-        private string _version;
         private static string path;
+        private string consoleoutput;
 
         // GET: Default
         public ActionResult Index()
@@ -65,16 +66,14 @@ namespace sample.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(ProjectConfig mbProjectConfig)
+        public ContentResult Index(ProjectConfig mbProjectConfig)
         {
-
-            ViewBag.dummy = "SUCCESS";
+            //return Content("aerqer");
             String currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
             DirectoryInfo currentDirectoryInfo = new DirectoryInfo(currentDirectory);
             String grandParentPath = currentDirectoryInfo.Parent.Parent.Parent.FullName;
             string lstrRelPath = grandParentPath + "\\src\\Syncfusion_" + mbProjectConfig.sync_ver;
             string lstrCommand = $"{mbProjectConfig.net_ver} {mbProjectConfig.sync_ver} {mbProjectConfig.controller } {mbProjectConfig.view}";
-            string consoleoutput;
             string[] arguments = new string[] { "dotnet restore", "dotnet build", "dotnet run" };
 
             foreach (string currentargument in arguments)
@@ -93,69 +92,72 @@ namespace sample.Controllers
                     p.StartInfo.CreateNoWindow = true;
 
                     p.Start();
-                    string output; int exitCode;
-                    var timeout = 30000;
+                    var timeout = currentargument == "dotnet run" ? 30000 : 10000;
                     if (currentargument == "dotnet run")
                     {
                         KillDotNetProcess();
                     }
 
                     p.StandardInput.WriteLine(@"cd " + lstrRelPath);
-                    if (currentargument != "dotnet run")
-                    {
-                        p.StandardInput.WriteLine(currentargument);
-                        p.StandardInput.Flush();
-                        p.StandardInput.Close();
-                    }
+                    //if (currentargument != "dotnet run")
+                    //{
+                    //    p.StandardInput.WriteLine(currentargument);
+                    //    p.StandardInput.Flush();
+                    //    p.StandardInput.Close();
+                    //}
 
                     if (currentargument == "dotnet run")
-                    {
                         p.StandardInput.WriteLine(currentargument + " --framework " + mbProjectConfig.net_ver);
-                        p.StandardInput.Flush();
-                        p.StandardInput.Close();
-                        var outputBuilder = new StringBuilder();
-                        var errorBuilder = new StringBuilder();
-                        //******************************
+                    else
+                        p.StandardInput.WriteLine(currentargument);
 
-                        try
+
+                    p.StandardInput.Flush();
+                    p.StandardInput.Close();
+                    var outputBuilder = new StringBuilder();
+                    var errorBuilder = new StringBuilder();
+                    //******************************
+
+                    try
+                    {
+                        p.BeginOutputReadLine();
+                        p.BeginErrorReadLine();
+                        p.OutputDataReceived += (sender, e) =>
+                    {
+                        //if (e.Data == null)
+                        //{
+                        //    outputWaitHandle.Set();
+                        //}
+                        //else
                         {
-                            p.BeginOutputReadLine();
-                            p.BeginErrorReadLine();
-                            p.OutputDataReceived += (sender, e) =>
+                            outputBuilder.AppendLine(e.Data);
+                        }
+                    };
+                        p.ErrorDataReceived += (sender, e) =>
                         {
-                            if (e.Data == null)
-                            {
-                                outputWaitHandle.Set();
-                            }
-                            else
-                            {
+                            //if (e.Data == null)
+                            //{
+                            //    errorWaitHandle.Set();
+                            //}
+                            //else
+                            //{
                                 outputBuilder.AppendLine(e.Data);
-                            }
+                            //}
                         };
-                            p.ErrorDataReceived += (sender, e) =>
-                            {
-                                if (e.Data == null)
-                                {
-                                    errorWaitHandle.Set();
-                                }
-                                else
-                                {
-                                    outputBuilder.AppendLine(e.Data);
-                                }
-                            };
-
-                            p.Start();
 
 
-                            bool exited = p.WaitForExit(timeout);
 
-                            //exitCode = p.ExitCode;
-                            consoleoutput = outputBuilder.ToString();
+                        bool exited = p.WaitForExit(timeout);
+
+                        //exitCode = p.ExitCode;
+                        consoleoutput = outputBuilder.ToString();
+                        if (currentargument == "dotnet run")
+                        {
                             var index = consoleoutput.IndexOf("http");
-                           if (index > -1)
+                            if (index > -1)
                             {
                                 int lIntindex = consoleoutput.IndexOf("http");
-                                int lIntLength = consoleoutput.IndexOf("Application") - lIntindex;
+                                int lIntLength = consoleoutput.IndexOf("Application") - lIntindex - 2;
                                 string url = consoleoutput.Substring(lIntindex, lIntLength);
                                 generatedUrl = url + "/" + mbProjectConfig.controller + "/" + mbProjectConfig.view; ;
                             }
@@ -163,56 +165,41 @@ namespace sample.Controllers
                             {
                                 generatedUrl = "Retry after sometime";
                             }
-
                         }
-                        finally
+                        else if (currentargument == "dotnet build" || currentargument == "dotnet restore")
                         {
-                            outputWaitHandle.WaitOne(0);
-                            errorWaitHandle.WaitOne(0);
+                            if (consoleoutput.Contains("Failed"))
+                            {
+                                MailMessage mail = new MailMessage();
+                                mail.From = new MailAddress("deepaloganathan@syncfusion.com");
+                                mail.To.Add(new MailAddress("deepaloganathan@syncfusion.com"));
+                                SmtpClient client = new SmtpClient();
+                                client.Port = 25;
+                                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                                client.UseDefaultCredentials = false;
+                                client.Host = "smtp.gmail.com";
+                                mail.Subject = "this is a test email.";
+                                mail.Body = consoleoutput;
+                                client.Send(mail);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        generatedUrl = ex.ToString();
 
-                    //******************************
+                    }
+                    finally
+                    {
+                        outputWaitHandle.WaitOne(0);
+                        errorWaitHandle.WaitOne(0);
+                    }
 
-
-
-
-
-
-
-
-
-                    //var output = "";
-                    //if (currentargument == "dotnet run")
-                    //{
-
-                    //    p.BeginOutputReadLine();
-
-                    //    p.OutputDataReceived += (sender, args) =>
-                    //    {
-                    //        output += args.Data;
-
-                    //    };
-
-                    //    //p.WaitForExit();
-                    //    Thread.Sleep(15000);
-
-
-
-                    //    consoleoutput = output;
-                    //var index = consoleoutput.IndexOf("http");
-                    //if (index > -1)
-                    //{
-                    //    int lIntindex = consoleoutput.IndexOf("http");
-                    //    int lIntLength = consoleoutput.IndexOf("Application") - lIntindex;
-                    //    string url = consoleoutput.Substring(lIntindex, lIntLength);
-                    //    generatedUrl = url + "/" + mbProjectConfig.controller + "/" + mbProjectConfig.view; ;
-                    //}
-                    //else
-                    //    generatedUrl = "Retry after sometime";
                 }
+
             }
-            return Content("Generated URL: " + generatedUrl);
+            //return Content(consoleoutput);
+            return Content(generatedUrl);
 
         }
 
@@ -225,43 +212,54 @@ namespace sample.Controllers
         [AcceptVerbs("Post")]
         public void Save()
         {
+            HttpFileCollection uploadedFiles;
             HttpContext lHttpContext = System.Web.HttpContext.Current;
             try
             {
                 if (lHttpContext.Request.Files.AllKeys.Length > 0)
                 {
-                    var httpPostedFile = lHttpContext.Request.Files["controller_file"];
+                    uploadedFiles = lHttpContext.Request.Files;
 
-                    if (httpPostedFile != null)
+                    if (uploadedFiles != null && uploadedFiles.Count > 0 && uploadedFiles[0].FileName != "")
                     {
-                        if (httpPostedFile.FileName.EndsWith("cs"))
+                        for (int i = 0; i < uploadedFiles.Count; i++)
                         {
-                            path = "//netcoreapp//Syncfusion_" + lHttpContext.Request.Form[0].ToString() + "//controllers";
-                        }
-                        else if (httpPostedFile.FileName.EndsWith("cshtml"))
-                        {
-                            path = "//netcoreapp//Syncfusion_" + lHttpContext.Request.Form[0].ToString() + "//views//" + lHttpContext.Request.Form[1].ToString();
-                        }
-                        string targetFolder = path;
-                        var fileSave = lHttpContext.Server.MapPath(targetFolder);
-                        var fileSavePath = Path.Combine(fileSave, httpPostedFile.FileName);
-                        if (!System.IO.File.Exists(fileSavePath))
-                        {
-                            httpPostedFile.SaveAs(fileSavePath);
-                            HttpResponse Response = lHttpContext.Response;
-                            Response.Clear();
-                            Response.ContentType = "application/json; charset=utf-8";
-                            Response.StatusDescription = "File uploaded succesfully";
-                            Response.End();
-                        }
-                        else
-                        {
-                            HttpResponse Response = lHttpContext.Response;
-                            Response.Clear();
-                            Response.Status = "400 File already exists";
-                            Response.StatusCode = 400;
-                            Response.StatusDescription = "File already exists";
-                            Response.End();
+                            if (uploadedFiles[i].FileName != null && uploadedFiles[i].FileName != "")
+                            {
+                                if (uploadedFiles[i].FileName.EndsWith("cs"))
+                                {
+                                    path = "//netcoreapp//Syncfusion_" + lHttpContext.Request.Form[0].ToString() + "//controllers";
+                                }
+                                else if (uploadedFiles[i].FileName.EndsWith("cshtml"))
+                                {
+                                    path = "//netcoreapp//Syncfusion_" + lHttpContext.Request.Form[0].ToString() + "//views//" + lHttpContext.Request.Form[1].ToString();
+                                }
+                                string targetFolder = lHttpContext.Server.MapPath(path);
+
+                                if (!Directory.Exists(targetFolder))
+                                {
+                                    Directory.CreateDirectory(targetFolder);
+                                }
+
+                                if (!System.IO.File.Exists(targetFolder))
+                                {
+                                    uploadedFiles[i].SaveAs(targetFolder + "//" + uploadedFiles[i].FileName);
+                                    HttpResponse Response = lHttpContext.Response;
+                                    Response.Clear();
+                                    Response.ContentType = "application/json; charset=utf-8";
+                                    Response.StatusDescription = "File uploaded succesfully";
+                                    Response.End();
+                                }
+                                else
+                                {
+                                    HttpResponse Response = lHttpContext.Response;
+                                    Response.Clear();
+                                    Response.Status = "400 File already exists";
+                                    Response.StatusCode = 400;
+                                    Response.StatusDescription = "File already exists";
+                                    Response.End();
+                                }
+                            }
                         }
                     }
                 }

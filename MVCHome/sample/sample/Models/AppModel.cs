@@ -12,6 +12,7 @@ namespace sample.Model
         public List<DropdownModel> List() {
             List<DropdownModel> list_items = new List<DropdownModel>();
             list_items.Add(new DropdownModel { Text = "1.0", Value = "netcoreapp1.0" });
+            list_items.Add(new DropdownModel { Text = "1.1", Value = "netcoreapp1.1" });
             list_items.Add(new DropdownModel { Text = "2.0", Value = "netcoreapp2.0" });
             return list_items;
         }
@@ -26,6 +27,7 @@ namespace sample.Model
             List<DropdownModel_Sync> list_items = new List<DropdownModel_Sync>();
             list_items.Add(new DropdownModel_Sync { Text = "16.1.0.37", Value = "16.1.0.37" });
             list_items.Add(new DropdownModel_Sync { Text = "16.2.0.41", Value = "16.2.0.41" });
+            list_items.Add(new DropdownModel_Sync { Text = "16.2.0.46", Value = "16.2.0.46" });
             return list_items;
         }
     }
